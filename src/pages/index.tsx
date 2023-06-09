@@ -1,12 +1,12 @@
 import { type NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
 import Navbar from "~/components/navbar";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data: ownerData } = api.owners.getAll.useQuery();
+  const { data: sessionData } = useSession();
 
   return (
     <>
@@ -16,42 +16,14 @@ const Home: NextPage = () => {
         <link rel="icon" href="/n_favicon.ico" />
       </Head>
       <Navbar text="Faithstore" link="https://inventory-iselein.vercel.app/" />
-      <main className="flex flex-col items-center justify-center">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <div className="flex flex-col items-center gap-2">
+          {ownerData && sessionData &&
             <p className="text-2xl text-black">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
+                {ownerData[0]?.email}
             </p>
-            <AuthShowcase />
-          </div>
-        </div>
-      </main>
+          }
+        <button>ddd</button>
     </>
   );
 };
 
 export default Home;
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-black">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-black no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
