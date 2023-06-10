@@ -28,7 +28,7 @@ const Navbar = (navProps: NavInfo) => {
                     onClick={sessionData ? () => void signOut() : () => void signIn()}
                 >{sessionData ? "Sign out" : "Sign in"}</button>
                 {sessionData && sessionData.user.image &&
-                    <Image src={sessionData?.user.image} alt="" width={25} height={25}/>
+                    <Image className="rounded-full" src={sessionData?.user.image} alt="" width={25} height={25}/>
                 }
             </div>
         </div>
