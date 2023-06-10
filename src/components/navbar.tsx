@@ -11,9 +11,9 @@ const Navbar = (navProps: NavInfo) => {
     const { data: sessionData } = useSession();
 
     return(
-        <div className="p-2 text-blue-600 font-semibold flex flex-row justify-between border-b border-blue-100">
+        <div className="p-2 sticky z-40 top-0 text-blue-600 font-atkinson font-semibold flex flex-row justify-between border-b border-blue-100 backdrop-blur">
             <div className="flex flex-row items-center gap-2">
-                <Link href={"https://inventory-iselein.vercel.app/"}>
+                <Link href={"/"}>
                     <Image src={"/n_favicon.ico"} alt="" width={30} height={30}></Image>
                 </Link>
                 <Link href={navProps.link} >
