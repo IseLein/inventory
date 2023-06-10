@@ -17,7 +17,7 @@ export const Layout = (props: PropsWithChildren) => {
           <meta name="description" content="Book keeping application for Faithstore" />
           <link rel="icon" href="/n_favicon.ico" />
         </Head>
-        <div className="min-h-screen text-blue-600 text-xl font-semibold text-center">
+        <div className="min-h-screen text-blue-600 text-xl text-center">
           {!ownerData &&
             <div className="px-5 w-fit left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 absolute flex justify-center items-center text-blue-600">
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

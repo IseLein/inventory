@@ -23,7 +23,7 @@ const Home: NextPage = () => {
               <div className="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 xl:gap-8">
                 <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg"
                 >SALES</button>
-                <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson text-white bg-blue-400 hover:bg-blue-300 rounded-lg"
+                <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg"
                 >BOOKS</button>
                 <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg"
                 >STOCK</button>
@@ -122,14 +122,14 @@ const GraphView: React.FC = () => {
     return (
         <div className="">
             <div className="rounded-lg border-2 border-blue-100">
-                <div className="p-2 flex flex-row justify-end">
+                <div className="pt-1 px-2 flex flex-row justify-end">
                     <label className="text-sm font-normal font-atkinson">
                         <input type="checkbox" checked={isQtyView} onClick={() => setQtyView(!isQtyView)}
                         />{" Quantity"}
                     </label>
                 </div>
                 <div className="p-2">
-                    {!entries_ph || !entries_oh &&
+                    {!(entries_ph && entries_oh) &&
                         <div className="px-5 py-20 md:py-32 lg:py-48 xl:py-56 flex justify-center items-center text-blue-600">
                             <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
