@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Navbar from "~/components/navbar";
+import Ledger from "~/components/ledger";
 import { api } from "~/utils/api";
 import { useState } from "react";
 import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, Legend } from 'chart.js';
@@ -9,6 +10,8 @@ import { Line } from "react-chartjs-2";
 ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, Legend);
 
 const Home: NextPage = () => {
+  const { data: entries } = api.entries.getRecent.useQuery();
+
   return (
     <>
       <Head>
@@ -29,6 +32,7 @@ const Home: NextPage = () => {
                 >STOCK</button>
               </div>
           </div>
+          <Ledger entries={entries} showButton={true} />
       </div>
     </>
   );
@@ -84,7 +88,7 @@ const GraphView: React.FC = () => {
 
             let entry_data = isQtyView ? 1 : Number(entry_ph.price.toString());
             entry_data = entry_data * entry_ph.quantity;
-            oh_data[timeDiff] = oh_data[timeDiff] || 0 + entry_data;
+            ph_data[timeDiff] = ph_data[timeDiff] || 0 + entry_data;
         }
         for (const entry_oh of entries_oh) {
             let timeDiff = entry_oh.createdAt.getTime() - firstDay.getTime();
@@ -140,11 +144,18 @@ const GraphView: React.FC = () => {
                     }
                     {entries_ph && entries_oh &&
                         <>
-                        <div className="hidden md:block">
+                        <div className="hidden lg:block">
                             <Line
                               datasetIdKey='id'
                               options={options}
-                              data={getData(30) || data_not_used}
+                              data={getData(21) || data_not_used}
+                            />
+                        </div>
+                        <div className="hidden md:block lg:hidden">
+                            <Line
+                              datasetIdKey='id'
+                              options={options}
+                              data={getData(14) || data_not_used}
                             />
                         </div>
                         <div className="md:hidden">
