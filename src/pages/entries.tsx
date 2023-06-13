@@ -11,7 +11,7 @@ const Entries: NextPage = () => {
     return (
         <>
             <Head>
-              <title>Faithstore Inventory</title>
+              <title>Ledger Entries</title>
               <meta name="description" content="Book keeping application for Faithstore" />
               <link rel="icon" href="/n_favicon.ico" />
             </Head>

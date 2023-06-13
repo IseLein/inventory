@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Navbar from "~/components/navbar";
 import Ledger from "~/components/ledger";
+import Link from "next/link";
 import { api } from "~/utils/api";
 import { useState } from "react";
 import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, Legend } from 'chart.js';
@@ -22,14 +23,17 @@ const Home: NextPage = () => {
       <Navbar text="Faithstore" link="/" />
       <div className="py-3 px-5 md:px-28 xl:px-[22rem]">
           <GraphView />
-          <div className="my-3 md:my-6 xl:my-9">
+          <div className="my-6 xl:my-9">
               <div className="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 xl:gap-8">
-                <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg"
-                >SALES</button>
-                <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg"
-                >BOOKS</button>
-                <button className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg"
-                >STOCK</button>
+                <Link href={""} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
+                    SALES
+                </Link>
+                <Link href={"/books"} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
+                    BOOKS
+                </Link>
+                <Link href={""} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
+                    STOCK
+                </Link>
               </div>
           </div>
           <Ledger entries={entries} showButton={true} />
@@ -128,7 +132,7 @@ const GraphView: React.FC = () => {
             <div className="rounded-lg border-2 border-blue-100">
                 <div className="pt-1 px-2 flex flex-row justify-end">
                     <label className="text-sm font-normal font-atkinson">
-                        <input type="checkbox" checked={isQtyView} onClick={() => setQtyView(!isQtyView)}
+                        <input type="checkbox" checked={isQtyView} onChange={() => setQtyView(!isQtyView)}
                         />{" Quantity"}
                     </label>
                 </div>

@@ -21,7 +21,7 @@ model Book {
   price      Decimal
   quantity   Int
   category   String
-  image      String
+  image      String  @db.VarChar(1024)
   entries    Entry[]
 }
 
