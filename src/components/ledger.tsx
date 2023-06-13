@@ -79,7 +79,7 @@ const EntryUI = (props: { entry: EntryPlus }) => {
     }
 
     return (
-        <div className={`w-full py-2 bg-${data.book.category === "other"? 'red' : 'green'}-50 border-blue-600 border-x-${data.entry.type === "sale" ? '0' : '2'}`}>
+        <div className={`w-full py-2 ${data.book.category === "other"? 'bg-red-50' : 'bg-green-50'} border-blue-600 ${data.entry.type === "sale" ? 'border-x-0' : 'border-x-2'}`}>
             <div className="flex flex-row align-middle">
                 <div className="w-[65%]">
                     <div className="px-2 lg:px-4 text-sm lg:text-base text-left font-light">
