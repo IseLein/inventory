@@ -51,11 +51,13 @@ const Book = (
               <link rel="icon" href="/n_favicon.ico" />
             </Head>
             <Navbar text="Books" link="/books/" />
-            <div className="py-3 px-5 md:px-28 xl:px-[22rem]">
-                <div className="flex flex-col items-center font-atkinson md:text-2xl lg:text-3xl">
-                    <Image className="md:hidden" src={book.image} alt="" width={156} height={156} />
-                    <Image className="hidden md:block lg:hidden" src={book.image} alt="" width={256} height={256} />
-                    <Image className="hidden lg:block" src={book.image} alt="" width={346} height={346} />
+            <div className="py-3 px-5 md:px-28 xl:px-[12rem] 2xl:px-[20rem]">
+                <div className="flex flex-col font-atkinson text-base md:text-xl xl:text-2xl">
+                    <div className="py-4 md:py-6">
+                        <Image className="m-auto md:hidden" src={book.image} alt="" width={156} height={156} />
+                        <Image className="m-auto hidden md:block lg:hidden" src={book.image} alt="" width={256} height={256} />
+                        <Image className="m-auto hidden lg:block" src={book.image} alt="" width={346} height={346} />
+                    </div>
                     <div className="pt-3 md:pt-5 flex flex-row">
                         <div className="px-2 font-semibold">Title:</div>
                         <div>{book.title}</div>
@@ -69,12 +71,16 @@ const Book = (
                         <div>{book.author}</div>
                     </div>
                     <div className="pt-1 flex flex-row">
-                        <div className="px-2 font-semibold">Quantity:</div>
-                        <div>{`${money_format(book.quantity)}`}</div>
-                    </div>
-                    <div className="pt-1 flex flex-row">
                         <div className="px-2 font-semibold">Category:</div>
                         <div>{book.category === "peace_house" ? "Peace House" : "Others"}</div>
+                    </div>
+                    <div className="pt-1 flex flex-row">
+                        <div className="px-2 font-semibold">Price:</div>
+                        <div>{`₦${money_format(Number(book.price.toString()))}`}</div>
+                    </div>
+                    <div className="pt-1 flex flex-row">
+                        <div className="px-2 font-semibold">Quantity:</div>
+                        <div>{`${money_format(book.quantity)}`}</div>
                     </div>
                 </div>
             </div>

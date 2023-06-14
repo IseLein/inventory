@@ -21,7 +21,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/n_favicon.ico" />
       </Head>
       <Navbar text="Faithstore" link="/" />
-      <div className="py-3 px-5 md:px-28 xl:px-[22rem]">
+      <div className="py-3 px-5 md:px-28 xl:px-[12rem] 2xl:px-[20rem]">
           <GraphView />
           <div className="my-6 xl:my-9">
               <div className="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 xl:gap-8">
