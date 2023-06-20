@@ -67,7 +67,7 @@ const Books: NextPage = () => {
                         <input className="md:pl-1 text-base md:text-lg lg:text-xl focus:outline-none" type="text" 
                             onChange={(e) => {filterBooks(e.target.value)}}/>
                     </div>
-                    <Link className="px-2 flex flex-row items-center bg-blue-50 hover:bg-blue-200 rounded-full" href={"/books/"}>
+                    <Link className="px-2 flex flex-row items-center bg-blue-50 hover:bg-blue-200 rounded-full" href={"/books/new"}>
                         <FontAwesomeIcon className="px-1" icon={faPlus} width={18} />
                         <div className="lg:pl-2 text-base md:text-lg lg:text-xl">NEW</div>
                     </Link>
