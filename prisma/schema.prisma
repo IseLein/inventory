@@ -19,10 +19,27 @@ model Book {
   shortTitle String
   author     String
   price      Decimal
-  quantity   Int
   category   String
-  image      String  @db.VarChar(1024)
+  image      String      @db.VarChar(1024)
   entries    Entry[]
+  BookEntry  BookEntry[]
+}
+
+model BookGroup {
+  id        String      @id @default(cuid())
+  group     String      @unique
+  current   Boolean
+  BookEntry BookEntry[]
+}
+
+model BookEntry {
+  id String @id @default(cuid())
+
+  book      Book      @relation(fields: [bookId], references: [id], onDelete: NoAction)
+  bookId    String
+  group     BookGroup @relation(fields: [groupName], references: [group], onDelete: NoAction)
+  groupName String
+  quantity  Int
 }
 
 model Entry {
@@ -37,8 +54,8 @@ model Entry {
 }
 
 model Owner {
-  id    String  @id @default(cuid())
-  email String? @unique
+  id    String @id @default(cuid())
+  email String @unique
 }
 
 // Necessary for Next auth

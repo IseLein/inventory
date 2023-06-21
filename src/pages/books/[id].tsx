@@ -14,7 +14,7 @@ const Book = (
     props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
     const { id } = props;
-    const bookQuery = api.books.getById.useQuery({ id });
+    const bookQuery = api.books.getByIdWithGroups.useQuery({ id });
     if (bookQuery.status !== "success") {
         return(
             <div className="px-5 py-20 md:py-32 lg:py-48 xl:py-56 flex justify-center items-center text-blue-600">
@@ -26,7 +26,8 @@ const Book = (
             </div>
         );
     }
-    const { data: book } = bookQuery;
+    const { data: bookWithGroup } = bookQuery;
+    const { book, bookEntries } = bookWithGroup;
 
     function money_format(num: number): string {
         const old = num.toString();
@@ -78,10 +79,25 @@ const Book = (
                         <div className="px-2 font-semibold">Price:</div>
                         <div>{`₦${money_format(Number(book.price.toString()))}`}</div>
                     </div>
-                    <div className="pt-1 flex flex-row">
-                        <div className="px-2 font-semibold">Quantity:</div>
-                        <div>{`${money_format(book.quantity)}`}</div>
-                    </div>
+                    {bookEntries.length <= 0 &&
+                        <div className="pt-1 flex flex-row">
+                            <div className="px-2 font-semibold">Quantity:</div>
+                            <div>{`${money_format(0)}`}</div>
+                        </div>
+                    }
+                    {bookEntries.length > 0 &&
+                        <>
+                        <div className="pt-1 flex flex-row">
+                            <div className="px-2 font-semibold">Quantity:</div>
+                        </div>
+                        {bookEntries.map((bookEntry) => {
+                            <div className="pt-1 flex flex-row">
+                                <div className="px-2 font-semibold">{bookEntry.groupName}</div>
+                                <div>{`${money_format(bookEntry.quantity)}`}</div>
+                            </div>
+                        })}
+                        </>
+                    }
                 </div>
             </div>
         </>

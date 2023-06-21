@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Navbar from "~/components/navbar";
 import { api } from "~/utils/api";
-import { type Book } from "@prisma/client";
+import { type Book, type BookEntry } from "@prisma/client";
 import { Decimal } from "decimal.js";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,18 +11,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
+type BookWithGroup = {
+    book: Book,
+    bookEntries: BookEntry[]
+}
+
 const Books: NextPage = () => {
-    const { data: books } = api.books.getAll.useQuery();
+    const { data: booksWithGroup } = api.books.getAllWithGroups.useQuery();
     // placeholder book
-    const placeholder: Book = {
+    const placeholder: BookWithGroup = {
+        book: {
         id: "placeholder", createdAt: new Date(), title: "placeholder",
         shortTitle: "placeholder", author: "placeholder",
-        price: new Decimal(10.0), quantity: 0, category: "placeholder",
+        price: new Decimal(10.0), category: "placeholder",
         image: "placeholder"
+        },
+        bookEntries: []
     };
-    const [displayBooks, setDisplayBooks] = useState<Book[]>([placeholder]);
+    const [displayBooks, setDisplayBooks] = useState<BookWithGroup[]>([placeholder]);
 
-    if (!books) {
+    if (!booksWithGroup) {
         return(
             <div className="px-5 py-20 md:py-32 lg:py-48 xl:py-56 flex justify-center items-center text-blue-600">
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -34,20 +42,20 @@ const Books: NextPage = () => {
         );
     }
 
-    if (displayBooks[0]?.id === "placeholder") {
-        setDisplayBooks(books);
+    if (displayBooks[0]?.book.id === "placeholder") {
+        setDisplayBooks(booksWithGroup);
     }
 
     function filterBooks(prompt: string) {
-        if (!books) {
+        if (!booksWithGroup) {
             return;
         }
 
-        let d_books: Book[] = []
+        let d_books: BookWithGroup[] = []
         if (prompt.startsWith("a:")) {
-            d_books = books.filter((book) => book.author.toLowerCase().includes(prompt.substring(2).toLowerCase()));
+            d_books = booksWithGroup.filter((bookWithGroup) => bookWithGroup.book.author.toLowerCase().includes(prompt.substring(2).toLowerCase()));
         } else {
-            d_books = books.filter((book) => book.shortTitle.toLowerCase().includes(prompt.toLowerCase()));
+            d_books = booksWithGroup.filter((bookWithGroup) => bookWithGroup.book.shortTitle.toLowerCase().includes(prompt.toLowerCase()));
         }
         setDisplayBooks(d_books);
     }
@@ -73,9 +81,9 @@ const Books: NextPage = () => {
                     </Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 lg:gap-6">
-                    {displayBooks.map((book) => {
+                    {displayBooks.map((bookWithGroup) => {
                         return (
-                            <BookUI key={book.id} book={book} />
+                            <BookUI key={bookWithGroup.book.id} bookWithGroup={bookWithGroup} />
                         );
                     })}
                 </div>
@@ -89,8 +97,9 @@ const Books: NextPage = () => {
 
 export default Books;
 
-const BookUI = (props: { book: Book }) => {
-    const book = props.book;
+const BookUI = (props: { bookWithGroup: BookWithGroup }) => {
+    const book = props.bookWithGroup.book;
+    const bookEntries = props.bookWithGroup.bookEntries;
 
     function money_format(num: number): string {
         const old = num.toString();
@@ -107,6 +116,14 @@ const BookUI = (props: { book: Book }) => {
         return changed;
     }
 
+    function get_quantity(bookEntries: BookEntry[]): number {
+        let total = 0;
+        for (const entry of bookEntries) {
+            total += entry.quantity;
+        }
+        return total;
+    }
+
     return (
         <Link className="border border-slate-200 rounded-lg overflow-hidden" href={`/books/${book.id}`}>
             <div className="h-full flex flex-col justify-between">
@@ -121,7 +138,7 @@ const BookUI = (props: { book: Book }) => {
                     </div>
                 </div>
                 <div className="px-1 md:px-2 lg:px-4 lg:pb-1 flex flex-row justify-between text-base md:text-lg lg:text-xl 2xl:text-2xl">
-                    <div className="pr-1">{money_format(book.quantity)}</div>
+                    <div className="pr-1">{money_format(get_quantity(bookEntries))}</div>
                     <div className="pl-1">{money_format(Number(book.price))}</div>
                 </div>
             </div>
