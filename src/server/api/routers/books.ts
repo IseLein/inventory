@@ -1,28 +1,12 @@
 
-import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { uuid } from "uuidv4";
-import { type Book, type BookEntry, type BookGroup } from "@prisma/client";
+import { type Book, type BookEntry } from "@prisma/client";
 
-import { env } from "~/env.mjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
     createTRPCRouter,
     protectedProcedure,
 } from "~/server/api/trpc";
-
-const firebaseConfig = {
-    apiKey: env.API_KEY,
-    authDomain: env.AUTH_DOMAIN,
-    projectId: env.PROJECT_ID,
-    storageBucket: env.STORAGE_BUCKET,
-    messagingSenderId: env.MESSAGING_SENDER_ID,
-    appId: env.APP_ID,
-    measurementId: env.MEASUREMENT_ID
-};
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
 
 const addGroupsToBook = (books: Book[], g_bookEntries: BookEntry[]) => {
     return books.map((book) => {
@@ -73,9 +57,25 @@ export const booksRouter = createTRPCRouter({
             };
     }),
     create: protectedProcedure
-        .input(z.object({ img: z.instanceof(Blob) }))
+        .input(z.object({
+            title: z.string(),
+            shortTitle: z.string(),
+            author: z.string(),
+            price: z.number(),
+            category: z.string(),
+            image: z.string(),
+        }))
         .mutation(async ({ ctx, input }) => {
-            const imgRef = ref(storage, `books/${uuid()}`);
-            await uploadBytes(imgRef, input.img);
+            const book = await ctx.prisma.book.create({
+                data: {
+                    title: input.title,
+                    shortTitle: input.shortTitle,
+                    author: input.author,
+                    price: input.price,
+                    category: input.category,
+                    image: input.image,
+                },
+            });
+            return book;
     }),
 });
