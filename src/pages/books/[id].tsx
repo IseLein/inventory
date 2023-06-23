@@ -55,9 +55,9 @@ const Book = (
             <div className="py-3 px-5 md:px-28 xl:px-[12rem] 2xl:px-[20rem]">
                 <div className="flex flex-col font-atkinson text-base md:text-xl xl:text-2xl">
                     <div className="py-4 md:py-6">
-                        <Image className="m-auto md:hidden" src={book.image} alt="" width={156} height={156} />
-                        <Image className="m-auto hidden md:block lg:hidden" src={book.image} alt="" width={256} height={256} />
-                        <Image className="m-auto hidden lg:block" src={book.image} alt="" width={346} height={346} />
+                        <Image className="m-auto rounded-lg overflow-hidden md:hidden" src={book.image} alt="" width={156} height={156} />
+                        <Image className="m-auto rounded-lg overflow-hidden hidden md:block lg:hidden" src={book.image} alt="" width={256} height={256} />
+                        <Image className="m-auto rounded-lg overflow-hidden hidden lg:block" src={book.image} alt="" width={346} height={346} />
                     </div>
                     <div className="pt-3 md:pt-5 flex flex-row">
                         <div className="px-2 font-semibold">Title:</div>

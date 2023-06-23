@@ -32,6 +32,7 @@ const Entries: NextPage = () => {
     const [price, setPrice] = useState(0);
     const [category, setCategory] = useState("");
     const [modalMsg, setModalMsg] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const { mutate, isLoading: isMutating } = api.books.create.useMutation({
@@ -53,37 +54,44 @@ const Entries: NextPage = () => {
         const modal = document.getElementsByTagName("dialog").item(0);
         if (!modal) {
             console.log("error due to ..");
+            setIsLoading(false);
             return;
         }
         // validate
         if (!imageFile) {
             setModalMsg("Select an Image");
             modal.showModal();
+            setIsLoading(false);
             return;
         }
         if (title === "") {
             setModalMsg("Enter a title");
             modal.showModal();
+            setIsLoading(false);
             return;
         }
         if (shortTitle === "") {
             setModalMsg("Enter a display title");
             modal.showModal();
+            setIsLoading(false);
             return;
         }
         if (author === "") {
             setModalMsg("Enter a display title");
             modal.showModal();
+            setIsLoading(false);
             return;
         }
         if (price === 0) {
             setModalMsg("Enter a price");
             modal.showModal();
+            setIsLoading(false);
             return;
         }
         if (category === "") {
             setModalMsg("Choose a category");
             modal.showModal();
+            setIsLoading(false);
             return;
         }
 
@@ -92,6 +100,7 @@ const Entries: NextPage = () => {
             .then(
                 async () => {
                     const image = await getDownloadURL(imgRef);
+                    setIsLoading(false);
                     mutate({
                         title,
                         shortTitle,
@@ -104,6 +113,7 @@ const Entries: NextPage = () => {
                 () => {
                     setModalMsg("An error occured");
                     modal.showModal();
+                    setIsLoading(false);
                     return;
                 }
             );
@@ -183,9 +193,13 @@ const Entries: NextPage = () => {
                             <label className="pl-1" htmlFor="oh">Others</label>
                         </div>
                     </div>
-                    <button className="my-2 px-3 py-2 rounded-full bg-blue-50" onClick={handleSubmit}>
-                        {!isMutating && <div>ADD</div>}
-                        {isMutating && <div>LOADING</div>}
+                    <button disabled={isLoading || isMutating} className="my-2 px-3 py-2 rounded-full bg-blue-50"
+                        onClick={() => {
+                            setIsLoading(true);
+                            handleSubmit();
+                        }}>
+                        {!(isMutating || isLoading) && <div>ADD</div>}
+                        {(isMutating || isLoading) && <div>loading</div>}
                     </button>
                 </div>
             </div>
