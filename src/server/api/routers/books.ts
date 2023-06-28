@@ -61,7 +61,7 @@ export const booksRouter = createTRPCRouter({
             title: z.string(),
             shortTitle: z.string(),
             author: z.string(),
-            price: z.number(),
+            price: z.number().gt(0),
             category: z.string(),
             image: z.string(),
         }))

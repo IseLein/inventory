@@ -22,7 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-const Entries: NextPage = () => {
+const NewBook: NextPage = () => {
     const placeholder = "https://firebasestorage.googleapis.com/v0/b/inventory-389209.appspot.com/o/books%2Fplaceholder.png?alt=media&token=7183db6b-749d-4016-a1dc-7cbce9d9de06";
     const [imageSrc, setImageSrc] = useState(placeholder);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -131,7 +131,7 @@ const Entries: NextPage = () => {
     return (
         <>
             <Head>
-              <title>Ledger Entries</title>
+              <title>New Book</title>
               <meta name="description" content="Book keeping application for Faithstore" />
               <link rel="icon" href="/n_favicon.ico" />
             </Head>
@@ -207,4 +207,4 @@ const Entries: NextPage = () => {
     );
 };
 
-export default Entries;
+export default NewBook;

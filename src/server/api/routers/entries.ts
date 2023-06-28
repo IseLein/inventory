@@ -1,5 +1,5 @@
 
-// import { z } from "zod";
+import { z } from "zod";
 import {
     createTRPCRouter,
     protectedProcedure,
@@ -81,5 +81,77 @@ export const entriesRouter = createTRPCRouter({
                 }
             }
         });
+    }),
+    createWithGroup: protectedProcedure
+        .input(z.object({
+            bookid: z.string(),
+            type: z.enum(["sale", "purchase"]),
+            quantity: z.number().gt(0).int(),
+            price: z.number().gt(0),
+            groupName: z.string(),
+        }))
+        .mutation( async({ ctx, input}) => {
+            const bookEntries = await ctx.prisma.bookEntry.findMany({
+                where: {
+                    bookId: input.bookid,
+                    groupName: input.groupName,
+                }
+            })
+            let bookEntry = bookEntries[0];
+            if (input.type === "sale") {
+                if (!bookEntry) {
+                    return;
+                }
+                if (bookEntry.quantity < input.quantity) {
+                    throw new TRPCError({
+                        code: "INTERNAL_SERVER_ERROR",
+                        message: "There are not enough books in stock",
+                    });
+                }
+                await ctx.prisma.entry.create({
+                    data: {
+                        bookId: input.bookid,
+                        type: input.type,
+                        quantity: input.quantity,
+                        price: input.price,
+                    }
+                });
+                const updatedBookEntry = await ctx.prisma.bookEntry.update({
+                    where: {
+                        id: bookEntry.id,
+                    },
+                    data: {
+                        quantity: bookEntry.quantity - input.quantity,
+                    },
+                })
+                return updatedBookEntry;
+            } else {
+                if (!bookEntry) {
+                    bookEntry = await ctx.prisma.bookEntry.create({
+                        data: {
+                            bookId: input.bookid,
+                            groupName: input.groupName,
+                            quantity: 0,
+                        }
+                    });
+                }
+                await ctx.prisma.entry.create({
+                    data: {
+                        bookId: input.bookid,
+                        type: input.type,
+                        quantity: input.quantity,
+                        price: input.price,
+                    }
+                });
+                const updatedBookEntry = await ctx.prisma.bookEntry.update({
+                    where: {
+                        id: bookEntry.id,
+                    },
+                    data: {
+                        quantity: bookEntry.quantity + input.quantity,
+                    },
+                })
+                return updatedBookEntry;
+            }
     }),
 });

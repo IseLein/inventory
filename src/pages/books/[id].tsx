@@ -1,6 +1,7 @@
 
 import type { InferGetServerSidePropsType, GetServerSidePropsContext } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import Navbar from "~/components/navbar";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { prisma } from "~/server/db";
@@ -61,43 +62,48 @@ const Book = (
                     </div>
                     <div className="pt-3 md:pt-5 flex flex-row">
                         <div className="px-2 font-semibold">Title:</div>
-                        <div>{book.title}</div>
+                        <div className="text-left">{book.title}</div>
                     </div>
                     <div className="pt-1 flex flex-row">
                         <div className="px-2 font-semibold">Display:</div>
-                        <div>{book.shortTitle}</div>
+                        <div className="text-left">{book.shortTitle}</div>
                     </div>
                     <div className="pt-1 flex flex-row">
                         <div className="px-2 font-semibold">Author:</div>
-                        <div>{book.author}</div>
+                        <div className="text-left">{book.author}</div>
                     </div>
                     <div className="pt-1 flex flex-row">
                         <div className="px-2 font-semibold">Category:</div>
-                        <div>{book.category === "peace_house" ? "Peace House" : "Others"}</div>
+                        <div className="text-left">{book.category === "peace_house" ? "Peace House" : "Others"}</div>
                     </div>
                     <div className="pt-1 flex flex-row">
                         <div className="px-2 font-semibold">Price:</div>
-                        <div>{`₦${money_format(Number(book.price.toString()))}`}</div>
+                        <div className="text-left">{`₦${money_format(Number(book.price.toString()))}`}</div>
                     </div>
                     {bookEntries.length <= 0 &&
                         <div className="pt-1 flex flex-row">
                             <div className="px-2 font-semibold">Quantity:</div>
-                            <div>{`${money_format(0)}`}</div>
+                            <div className="text-left">{`${money_format(0)}`}</div>
                         </div>
                     }
                     {bookEntries.length > 0 &&
                         <>
                         <div className="pt-1 flex flex-row">
-                            <div className="px-2 font-semibold">Quantity:</div>
+                            <div className="px-2 font-semibold">Quantity</div>
                         </div>
                         {bookEntries.map((bookEntry) => {
-                            <div className="pt-1 flex flex-row">
-                                <div className="px-2 font-semibold">{bookEntry.groupName}</div>
-                                <div>{`${money_format(bookEntry.quantity)}`}</div>
-                            </div>
-                        })}
+                            return (
+                                <div key={bookEntry.id} className="pt-1 flex flex-row">
+                                    <div className="px-2">{bookEntry.groupName}</div>
+                                    <div className="text-left">{`${money_format(bookEntry.quantity)}`}</div>
+                                </div>
+                        )})}
                         </>
                     }
+                    <div className="pt-1 flex flex-row">
+                        <Link href={`/entries/new?type=sale&bookid=${book.id}`} className="mx-2 px-2 py-1 rounded-lg bg-blue-50">sell book</Link>
+                        <Link href={`/entries/new?type=purchase&bookid=${book.id}`} className="mx-2 px-2 py-1 rounded-lg bg-blue-50">add more books</Link>
+                    </div>
                 </div>
             </div>
         </>

@@ -25,13 +25,13 @@ const Home: NextPage = () => {
           <GraphView />
           <div className="my-6 xl:my-9">
               <div className="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 xl:gap-8">
-                <Link href={""} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
+                <Link href={"/entries/new?type=sale"} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
                     SALES
                 </Link>
                 <Link href={"/books"} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
                     BOOKS
                 </Link>
-                <Link href={""} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
+                <Link href={"/entries/new?type=purchase"} className="py-2 px-3 border-0 text-lg font-normal font-atkinson bg-blue-50 hover:bg-blue-100 rounded-lg">
                     STOCK
                 </Link>
               </div>
@@ -75,7 +75,7 @@ const GraphView: React.FC = () => {
             return null
         }
         const dates: Date[] = [];
-        for (let i = n - 1; i >= 0; i--) {
+        for (let i = 29; i >= 0; i--) {
             const date = new Date();
             date.setDate(date.getDate() - i);
             dates[dates.length] = date;
@@ -84,7 +84,7 @@ const GraphView: React.FC = () => {
         const oh_data: number[] = Array.from({ length: 30 }, () => 0);
 
         const today = new Date();
-        today.setDate(today.getDate() - (n - 1));
+        today.setDate(today.getDate() - 29);
         const firstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         for (const entry_ph of entries_ph) {
             let timeDiff = entry_ph.createdAt.getTime() - firstDay.getTime();
@@ -92,7 +92,7 @@ const GraphView: React.FC = () => {
 
             let entry_data = isQtyView ? 1 : Number(entry_ph.price.toString());
             entry_data = entry_data * entry_ph.quantity;
-            ph_data[timeDiff] = ph_data[timeDiff] || 0 + entry_data;
+            ph_data[timeDiff] = (ph_data[timeDiff] || 0) + entry_data;
         }
         for (const entry_oh of entries_oh) {
             let timeDiff = entry_oh.createdAt.getTime() - firstDay.getTime();
@@ -100,21 +100,25 @@ const GraphView: React.FC = () => {
 
             let entry_data = isQtyView ? 1 : Number(entry_oh.price.toString());
             entry_data = entry_data * entry_oh.quantity;
-            oh_data[timeDiff] = oh_data[timeDiff] || 0 + entry_data;
+            oh_data[timeDiff] = (oh_data[timeDiff] || 0) + entry_data;
         }
 
+        const n_Dates = dates.slice(30-n);
+        const n_ph = ph_data.slice(30-n);
+        const n_oh = oh_data.slice(30-n);
+
         const graphData = {
-            labels: dates.map((date: Date) => {return `${month_itoa(date.getMonth())} ${date.getDate()}`}),
+            labels: n_Dates.map((date: Date) => {return `${month_itoa(date.getMonth())} ${date.getDate()}`}),
             datasets: [
                 {
                   label: 'Peace House',
-                  data: ph_data,
+                  data: n_ph,
                   borderColor: 'rgb(24, 165, 88)',
                   backgroundColor: 'rgba(24, 165, 88, 0.5)',
                 },
                 {
                   label: 'Others',
-                  data: oh_data,
+                  data: n_oh,
                   borderColor: 'rgb(255, 99, 132)',
                   backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 }
