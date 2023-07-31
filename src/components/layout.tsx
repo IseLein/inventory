@@ -4,7 +4,6 @@ import { api } from "~/utils/api";
 import Head from "next/head";
 import type { Session } from "next-auth";
 import type { Owner } from "@prisma/client";
-import Link from "next/link";
 
 export const Layout = (props: PropsWithChildren) => {
     const { data: ownerData } = api.owners.getAll.useQuery();
@@ -29,7 +28,7 @@ export const Layout = (props: PropsWithChildren) => {
           }
           {ownerData && !sessionData &&
             <div className="w-fit left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 absolute">
-                <div className="pb-2 md:text-2xl">Please sign in</div>
+                <div className="pb-2 md:text-2xl">Please sign in, if you are authorized</div>
                 <button
                     className="px-3 py-1 text-lg md:text-xl rounded-full bg-blue-100 hover:bg-blue-200"
                     onClick={() => void signIn()}
@@ -38,7 +37,7 @@ export const Layout = (props: PropsWithChildren) => {
           }
           {ownerData && sessionData && !isAuthorized(sessionData, ownerData) &&
             <div className="w-fit left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 absolute">
-                <Link className="underline" href={"https://science-hub-blog.vercel.app/"}>Not authorized. Click here to visit somewhere nice :)</Link>
+                <div>It seems like you are not authorized to access this website. Please contact iseoluwagbotemidaniel@gmail.com if you think this is an error</div>
                 <button
                     className="px-3 py-1 text-lg md:text-xl rounded-full bg-blue-100 hover:bg-blue-200"
                     onClick={() => void signOut()}
